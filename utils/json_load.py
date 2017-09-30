@@ -14,3 +14,4 @@ def loader(observer):
         # jsonデータを読み込んだファイルオブジェクトからPythonデータを作成
         observer.on_next(json.load(f))
         f.close()
+    observer.on_completed()
