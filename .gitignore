@@ -1,0 +1,39 @@
+__pycache__
+.tox
+MANIFEST
+*.egg-info
+
+# pytest cache
+.cache
+
+# created by release process
+dist/
+
+# proto src
+*pb2*
+
+# IDA
+.idea
+
+# ametsuchi
+ametsuchi-*
+
+# mock-iroha-dir
+docker/tiny/mock-iroha
+
+# pyc
+*.pyc
+
+
+## key
+*.pem
+
+## DS_Store
+.DS_Store
+
+# .o
+*.o
+*.a
+
+# dataes
+dataes/*
