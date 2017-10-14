@@ -37,3 +37,6 @@ docker/tiny/mock-iroha
 
 # dataes
 dataes/*
+
+# memo
+docs/
