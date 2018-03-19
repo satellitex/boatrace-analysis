@@ -5,3 +5,5 @@
 # generated test-requirements.txt) and run make update-requirements
 
 rx==1.6.0
+chainer
+cupy
