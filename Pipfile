@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 Rx = "==1.6.0"
 chainer = "*"
+boatrace_scraping = { path = './boatrace-scraping/', editable = 'true' }
 
 [dev-packages]
 
