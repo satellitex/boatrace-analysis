@@ -21,7 +21,7 @@ class Loader:
                 pass
 
     def _convert_numpy(self, data):
-        
+        pass
 
     def next(self):
         pass
