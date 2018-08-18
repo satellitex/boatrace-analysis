@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from trainer.trainer import Trainer
-from trainer.chainer_module import GraphDataset, GraphUpdater
 import chainer as ch
 import daz
 import os
@@ -46,11 +45,19 @@ class ChainerTrainer(Trainer):
 
         self.optimizer.setup(self.network)
 
-    def train(self, n_epoch=1000, batch_size=10, *, gpu_id=-1, test_flag=True):
+    def train(self,
+              n_epoch=1000,
+              batch_size=10,
+              train_num=100,
+              test_num=100,
+              *,
+              gpu_id=-1,
+              test_flag=True):
         logger.info(f"Train EpochSize: {n_epoch}, BatchSize: {batch_size}.")
 
         # Prepare data set
-        self.train_data = GraphDataset(self.data_processor, length=batch_size)
+        x_train, y_train = self.data_processor.get_train_data(n=train_num)
+        self.train_data = ch.datasets.TupleDataset(x_train, y_train)
 
         if not self.is_gpu_supporting:
             if gpu_id >= 0:
@@ -61,14 +68,14 @@ class ChainerTrainer(Trainer):
         # Batch size: the number of data directories
         train_iter = ch.iterators.SerialIterator(
             self.train_data, batch_size=batch_size, shuffle=True)
-        updater = GraphUpdater(
-            train_iter, self.optimizer, device=gpu_id, batch_size=batch_size)
+        updater = ch.training.StandardUpdater(
+            train_iter, self.optimizer, device=gpu_id)
 
         trainer = ch.training.Trainer(
             updater, (n_epoch, 'epoch'), out=self.save_model_dir)
 
         if test_flag is True:
-            x_data, y_data = self.data_processor.get_test_data(n=batch_size)
+            x_data, y_data = self.data_processor.get_test_data(n=test_num)
             test_data_tup = ch.datasets.TupleDataset(x_data, y_data)
 
             test_iter = ch.iterators.SerialIterator(
@@ -147,8 +154,8 @@ class ChainerTrainer(Trainer):
 
     def _evaluate_error(self, y_infer, y_answer):
         accuracy = ch.functions.accuracy(y_infer, y_answer)
-        precision, recall, f_score, support = ch.functions.classification_summary(
-            y_infer, y_answer)
+        precision, recall, f_score, support = \
+            ch.functions.classification_summary(y_infer, y_answer)
         logger.info(f"Accuracy : {accuracy:.5e}")
         logger.info(f"Precision: {precision:.5e}")
         logger.info(f"Recall   : {recall:.5e}")

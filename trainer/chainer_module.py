@@ -6,42 +6,6 @@
 import chainer as ch
 
 
-class Classifier(ch.Chain):
-    """Class to compute loss with the given predictor."""
-
-    def __init__(self, predictor):
-        """Initialize Classifier object.
-
-        Args:
-            predictor: ch.Chain like object.
-                The network.
-        """
-        super().__init__()
-        with self.init_scope():
-            self.predictor = predictor
-
-    def __call__(self, x, t, nadj=None):
-        """Calculate loss for backprop.
-
-        Args:
-            x: numpy.ndarray or cupy.ndarray
-                Input data for the NN.
-            t: numpy.ndarray or cupy.ndarray
-                Supervising signal.
-            nadj: chainer.util.CooMatrix, optional [None]
-                Normalized adjacency matrix in the sparse expression used for
-                Graph Convolutional Network.
-        Returns:
-            loss: float
-                Computed loss.
-        """
-        y = self.predictor(x, nadj)
-        loss = ch.functions.mean_squared_error(y, t)
-        accuracy = ch.functions.accuracy(y, t)
-        ch.report({'loss': loss, 'accuracy': accuracy}, self)
-        return loss
-
-
 class MLP(ch.ChainList):
     """
     copied by

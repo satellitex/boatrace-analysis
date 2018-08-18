@@ -17,5 +17,5 @@ daz = "*"
 python_version = "3.6"
 
 [scripts]
-lint = "flake8 ."
-fmt = "autopep8 -ivr ."
+lint = "flake8 trainer"
+fmt = "autopep8 -ivr trainer"

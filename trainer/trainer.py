@@ -7,7 +7,6 @@ from abc import ABCMeta, abstractmethod
 import os
 from trainer import util
 import logging
-import numpy as np
 
 logger = logging.getLogger(__name__)
 

@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import pickle
 import random
 import string
 import logging
 import numpy as np
 import os
-import chainer as ch
 
 DTYPE = np.float32
 logger = logging.getLogger(__name__)

@@ -20,11 +20,11 @@ class DataProcessor(object, metaclass=ABCMeta):
         raise NotImplemented
 
     @abstractmethod
-    def get_train_data(self, st=0, n=1):
+    def get_train_data(self, n=1):
         raise NotImplemented
 
     @abstractmethod
-    def get_test_data(self, st=1, n=1):
+    def get_test_data(self, n=1):
         raise NotImplemented
 
     @property
@@ -37,10 +37,6 @@ class DataProcessor(object, metaclass=ABCMeta):
 
 
 class JsonDataProcessor(DataProcessor):
-    DEFAULT_TRAIN_NUM = 30
-    DEFAULT_TEST_NUM = 30
-    DEFAULT_UNK_NUM = 30
-
     def prepare(self, force_prepare=False, n=100, normalize_adj_flag=False):
         """
         prepare calculation.
@@ -127,13 +123,30 @@ class JsonDataProcessor(DataProcessor):
         Returns: ndarray
         """
 
-    def get_train_data(self, st=0, n=DEFAULT_TRAIN_NUM):
+    def get_train_data(self, n=None):
+        if n is None:
+            n = int(len(self.in_array) / 3)
+        self._train_ed = n
+
+        return self.in_array[:n], self.out_array[:n]
+
+    def get_test_data(self, n=None):
+        if hasattr(self, '_train_ed'):
+            st = self._train_ed
+        else:
+            st = int(len(self.in_array) / 3)
+
+        if n is None:
+            n = int(len(self.in_array) / 3)
+        self._test_ed = st + n
         return self.in_array[st:st + n], self.out_array[st:st + n]
 
-    def get_test_data(self, st=DEFAULT_TRAIN_NUM, n=DEFAULT_TEST_NUM):
-        return self.in_array[st:st + n], self.out_array[st:st + n]
+    def get_unk_data(self, n=None):
+        if hasattr(self, '_test_ed'):
+            st = self._test_ed
+        else:
+            st = int(len(self.in_array) / 3) * 2
 
-    def get_unk_data(self,
-                     st=DEFAULT_TRAIN_NUM + DEFAULT_TEST_NUM,
-                     n=DEFAULT_UNK_NUM):
+        if n is None:
+            n = int(len(self.in_array) / 3)
         return self.in_array[st:st + n], self.out_array[st:st + n]
