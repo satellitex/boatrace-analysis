@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# copied by
-# https://gitlab.com/ricos/distr/blob/master/trainer/chainer_module.py
-
 import chainer as ch
 
 
 class MLP(ch.ChainList):
     """
-    copied by
-    https://gitlab.com/ricos/distr/blob/master/trainer/chainer_module.py#L151
     Multi Layer Perceptron.
     """
 

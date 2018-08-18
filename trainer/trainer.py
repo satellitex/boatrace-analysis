@@ -4,7 +4,6 @@
 """Trainer abstruct class."""
 
 from abc import ABCMeta, abstractmethod
-import os
 from trainer import util
 import logging
 
@@ -17,21 +16,10 @@ class Trainer(object, metaclass=ABCMeta):
     frameworks.
     """
 
-    DEBUG = 'debug'
-    TRAIN = 'train'
-    EVAL = 'eval'
-    INFER = 'infer'
-
-    # FRAMEWORK = 'string'  # You must define this in the subclass
-
     def __init__(self,
                  name_study,
-                 mode,
-                 x_variable_names,
-                 y_variable_names,
                  resource,
                  *,
-                 gpu_id=-1,
                  restart=True,
                  dropout=False,
                  data_processor=None,
@@ -42,13 +30,6 @@ class Trainer(object, metaclass=ABCMeta):
         Args:
             name_study: string
                 name of study, which is used to generate model directory.
-            mode: {'train', 'infer', 'eval', debug}
-                Mode to determine behavior of Distr object. Use 'train' to
-                perform training, 'infer' to perform inference.
-            x_variable_names: list of strings
-                List of variable names to be used for inputs of the network.
-            y_variable_names: list of strings
-                List of variable names to be used for outputs of the network.
             resource: Resource
                 Resource Object.
             restart: bool, optional [True]
@@ -64,18 +45,13 @@ class Trainer(object, metaclass=ABCMeta):
                 Optimizer. Used for training.
         """
         self.name_study = name_study
-        self.mode = mode
-        self.x_variable_names = x_variable_names
-        self.y_variable_names = y_variable_names
         self.resource = resource
-        self.gpu_id = gpu_id
         self.restart = restart
         self.dropout = dropout
         self.data_processor = data_processor
         self.network = network
         self.optimizer = optimizer
 
-        self.variable_names = x_variable_names + y_variable_names
         self.is_gpu_supporting = self._detect_gpu()
         logger.info(f"GPU: {self.is_gpu_supporting}")
 
@@ -87,13 +63,6 @@ class Trainer(object, metaclass=ABCMeta):
 
         logger.info(f"Read model path: {self.read_model_path}")
         logger.info(f"Save model path: {self.save_model_path}")
-
-        if not os.path.exists(self.read_model_path):
-            if self.mode == self.INFER:
-                raise ValueError('Model not found for {}'.format(
-                    self.read_model_path))
-        if not os.path.exists(self.save_model_dir):
-            os.makedirs(self.save_model_dir)
 
         self.ratio_test_train = .01
         self.n_monitor = 1

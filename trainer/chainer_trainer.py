@@ -16,11 +16,8 @@ class ChainerTrainer(Trainer):
 
     def __init__(self,
                  name_study,
-                 mode,
-                 x_variable_names,
-                 y_variable_names,
                  resource,
-                 gpu_id=-1,
+                 *,
                  restart=True,
                  dropout=False,
                  data_processor=None,
@@ -28,11 +25,7 @@ class ChainerTrainer(Trainer):
                  optimizer=None):
         super().__init__(
             name_study,
-            mode,
-            x_variable_names,
-            y_variable_names,
             resource,
-            gpu_id=gpu_id,
             restart=restart,
             dropout=dropout,
             data_processor=data_processor,
@@ -153,11 +146,7 @@ class ChainerTrainer(Trainer):
         return ch.cuda.available
 
     def _evaluate_error(self, y_infer, y_answer):
+        loss = ch.functions.softmax_cross_entropy(y_infer, y_answer)
         accuracy = ch.functions.accuracy(y_infer, y_answer)
-        precision, recall, f_score, support = \
-            ch.functions.classification_summary(y_infer, y_answer)
-        logger.info(f"Accuracy : {accuracy:.5e}")
-        logger.info(f"Precision: {precision:.5e}")
-        logger.info(f"Recall   : {recall:.5e}")
-        logger.info(f"F-Score  : {f_score:.5e}")
-        logger.debug(support)
+        logger.info(f"Loss    : {loss.data:.5e}")
+        logger.info(f"Accuracy : {accuracy.data:.5e}")

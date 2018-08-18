@@ -13,10 +13,14 @@ daz = "*"
 "flake8" = "*"
 "autopep8" = "*"
 pytest = "*"
+ipdb = "*"
 
 [requires]
 python_version = "3.6"
 
 [scripts]
-lint = "flake8 trainer tests"
-fmt = "autopep8 -ivr trainer tests"
+lint = "flake8 trainer tests main.py"
+fmt = "autopep8 -ivr trainer tests main.py"
+test = "pytest tests"
+train = "python main.py"
+infer = "python main.py --mode infer"

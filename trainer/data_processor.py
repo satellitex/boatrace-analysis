@@ -5,6 +5,7 @@ from trainer.resource import Resource
 import numpy as np
 from trainer import util
 import logging
+import chainer as ch
 
 DTYPE = np.float32
 logger = logging.getLogger(__name__)
@@ -150,3 +151,65 @@ class JsonDataProcessor(DataProcessor):
         if n is None:
             n = int(len(self.in_array) / 3)
         return self.in_array[st:st + n], self.out_array[st:st + n]
+
+
+class MockJsonDataProcessor(JsonDataProcessor):
+    """
+    Mock Json DataProcessor load xor data.
+    """
+
+    def _load_json(self):
+        return [
+            {
+                'x': 0,
+                'y': 0,
+                'xor': 0,
+            },
+            {
+                'x': 1,
+                'y': 0,
+                'xor': 1,
+            },
+            {
+                'x': 0,
+                'y': 1,
+                'xor': 1,
+            },
+            {
+                'x': 1,
+                'y': 1,
+                'xor': 0,
+            },
+            {
+                'x': 0,
+                'y': 0,
+                'xor': 0,
+            },
+            {
+                'x': 1,
+                'y': 0,
+                'xor': 1,
+            },
+            {
+                'x': 0,
+                'y': 1,
+                'xor': 1,
+            },
+            {
+                'x': 1,
+                'y': 1,
+                'xor': 0,
+            },
+        ]
+
+    def _convert_json_to_input_ndarray(self, json_data_list):
+        return np.array([
+            np.array([data['x'], data['y']]) for data in json_data_list
+        ]).astype(np.float32)
+
+    def _convert_json_to_output_ndarray(self, json_data_list):
+        return np.array([data['xor'] for data in json_data_list]).astype(
+            np.int32)
+
+    def _normalize(self, data):
+        return ch.functions.normalize(data)
