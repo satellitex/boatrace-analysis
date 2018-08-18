@@ -77,6 +77,43 @@ def test_mssp_graph_data_processor():
 def test_load_json():
     data_processor = GreedyJsonDataProcessor(name='test_greedy')
     json_list = data_processor._load_json()
+
     print(json_list[0])
     print(json_list[10])
-    assert(len(json_list) == 11309)
+    assert (len(json_list) == 11309)
+
+
+def test_convert_one_hot():
+    data_processor = GreedyJsonDataProcessor()
+
+    labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+    for a in ['a', 'b', 'f', 'g']:
+        one_hots = data_processor._convert_one_hot(a, labels)
+        assert (len(one_hots) == 7)
+        assert (one_hots[labels.index(a)] == 1)
+        assert (np.sum(one_hots) == 1)
+
+
+def test_convert_before_to_input():
+    data_processor = GreedyJsonDataProcessor()
+
+    before_array = data_processor._convert_before_to_input({
+        "temp":
+        "17.0",
+        "weather":
+        "晴",
+        "windspeed":
+        "7",
+        "wind":
+        "5",
+        "watertemp":
+        "22.0",
+        "wave":
+        "7"
+    })
+    print(before_array.astype(np.float32))
+    assert (before_array.shape == (26, ))
+    assert (all(before_array == [
+        17., 1., 0., 0., 0., 0., 7., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 22., 7.
+    ]))

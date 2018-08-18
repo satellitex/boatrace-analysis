@@ -218,6 +218,12 @@ class MockJsonDataProcessor(JsonDataProcessor):
 
 
 class GreedyJsonDataProcessor(JsonDataProcessor):
+    WEATHER_LABELS = ['晴', '曇り', '雨', '雪', '霧']
+    WIND_LABELS = [
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13',
+        '14', '15', '16', '17'
+    ]
+
     def _load_json(self):
         path_list = [
             name for name in os.listdir(self.resource.get_original_dir)
@@ -232,7 +238,33 @@ class GreedyJsonDataProcessor(JsonDataProcessor):
             return json.load(fp)
 
     def _convert_json_to_input_ndarray(self, json_data_list):
-        pass
+        return np.array([
+            self._convert_json_to_input_single(json_data)
+            for json_data in json_data_list
+        ])
+
+    def _convert_json_to_input_single(self, json_data):
+        return np.concatenate(
+            tuple(
+                self._convert_before_to_input(json_data['before']),
+                self._convert_member_to_input(json_data['members'])),
+            axis=0)
+
+    def _convert_before_to_input(self, json_before):
+        return np.concatenate(
+            ([json_before['temp']],
+             self._convert_one_hot(json_before['weather'],
+                                   self.WEATHER_LABELS),
+             [json_before['windspeed']],
+             self._convert_one_hot(json_before['wind'], self.WIND_LABELS),
+             [json_before['watertemp']], [json_before['wave']]),
+            axis=0).astype(np.float32)
+
+    def _convert_member_to_input(self, json_members):
+        raise NotImplemented
+
+    def _convert_one_hot(self, xs, labels):
+        return np.eye(len(labels))[labels.index(xs)]
 
     def _convert_json_to_output_ndarray(self, json_data_list):
         pass
