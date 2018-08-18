@@ -74,7 +74,7 @@ class JsonDataProcessor(DataProcessor):
         self.in_array = self._convert_json_to_input_ndarray(json_data_list)
         logger.debug(self.in_array)
 
-        self.out_array = self._convert_json_to_output_ndarray(json_data_list)
+        self.out_array = self._convert_json_to_label_ndarray(json_data_list)
         logger.debug(self.out_array)
 
         if normalize_adj_flag:
@@ -107,7 +107,7 @@ class JsonDataProcessor(DataProcessor):
         raise NotImplemented
 
     @abstractmethod
-    def _convert_json_to_output_ndarray(self, json_data_list):
+    def _convert_json_to_label_ndarray(self, json_data_list):
         """
         dict の list を受け取り deepLearning の出力となる ndarray を返す
         Args:
@@ -209,7 +209,7 @@ class MockJsonDataProcessor(JsonDataProcessor):
             np.array([data['x'], data['y']]) for data in json_data_list
         ]).astype(np.float32)
 
-    def _convert_json_to_output_ndarray(self, json_data_list):
+    def _convert_json_to_label_ndarray(self, json_data_list):
         return np.array([data['xor'] for data in json_data_list]).astype(
             np.int32)
 
@@ -234,8 +234,9 @@ class GreedyJsonDataProcessor(JsonDataProcessor):
     def _convert_json_to_input_ndarray(self, json_data_list):
         pass
 
-    def _convert_json_to_output_ndarray(self, json_data_list):
-        pass
+    def _convert_json_to_label_ndarray(self, json_data_list):
+        return np.array([1 if int(data['result']['refund']) >= 10**4 else 0
+                         for data in json_data_list])
 
     def _normalize(self, data):
         pass

@@ -37,7 +37,7 @@ class JsonTestDataProcessor(JsonDataProcessor):
             for data in json_data_list
         ]).astype(np.float32)
 
-    def _convert_json_to_output_ndarray(self, json_data_list):
+    def _convert_json_to_label_ndarray(self, json_data_list):
         return np.array([np.array([data['ans']])
                          for data in json_data_list]).astype(np.float32)
 
@@ -80,3 +80,14 @@ def test_load_json():
     print(json_list[0])
     print(json_list[10])
     assert(len(json_list) == 11309)
+
+
+def test_convert_to_label_ndarray():
+    test_actual_label = np.array([0, 0, 0, 0, 1])
+    data_processor = GreedyJsonDataProcessor()
+    json_list = data_processor._load_json()
+    test_expection_label = \
+        data_processor._convert_json_to_label_ndarray(json_list)[:5]
+    print("Actual_label : ".format(test_actual_label.all()))
+    print("Expection_label : ".format(test_expection_label.all()))
+    assert(test_actual_label.all() == test_expection_label.all())
