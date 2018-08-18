@@ -2,7 +2,6 @@ import os
 import json
 
 
-
 def loader(observer):
     pwd = os.environ["ANALYSIS_BOAT_HOME"]
     for file in os.listdir(pwd+"/dataes"):

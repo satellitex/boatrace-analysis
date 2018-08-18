@@ -1,0 +1,3 @@
+[submodule "boatrace-scraping"]
+	path = boatrace-scraping
+	url = https://github.com/satellitex/boatrace-scraping.git
