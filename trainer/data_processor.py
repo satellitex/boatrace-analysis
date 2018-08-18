@@ -222,6 +222,7 @@ class GreedyJsonDataProcessor(JsonDataProcessor):
         path_list = [
             name for name in os.listdir(self.resource.get_original_dir)
         ]
+        path_list = sorted(path_list)
         return [
             self._load_json_path(self.resource.get_original_dir, name)
             for name in path_list if os.path.splitext(name)[1] == '.json'

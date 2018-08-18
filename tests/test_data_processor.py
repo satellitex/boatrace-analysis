@@ -88,6 +88,6 @@ def test_convert_to_label_ndarray():
     json_list = data_processor._load_json()
     test_expection_label = \
         data_processor._convert_json_to_label_ndarray(json_list)[:5]
-    print("Actual_label : ".format(test_actual_label.all()))
-    print("Expection_label : ".format(test_expection_label.all()))
-    assert(test_actual_label.all() == test_expection_label.all())
+    print("Actual_label : {}".format(test_actual_label))
+    print("Expection_label : {}".format(test_expection_label))
+    assert(np.all(test_actual_label == test_expection_label))
