@@ -111,9 +111,75 @@ def test_convert_before_to_input():
         "wave":
         "7"
     })
-    print(before_array.astype(np.float32))
     assert (before_array.shape == (26, ))
-    assert (all(before_array == [
+    assert (np.all(before_array == [
         17., 1., 0., 0., 0., 0., 7., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,
         0., 0., 0., 0., 0., 0., 0., 22., 7.
     ]))
+
+
+def test_convert_member_to_input():
+    data_processor = GreedyJsonDataProcessor()
+
+    member_array = data_processor._convert_member_to_input({
+        "waku":
+        "1",
+        "number":
+        "3947",
+        "level":
+        "B1",
+        "name":
+        "寺本昇平",
+        "branch":
+        "群馬",
+        "hometown":
+        "神奈川",
+        "age":
+        "42",
+        "weight":
+        "49.5",
+        "F":
+        "0",
+        "L":
+        "0",
+        "ST":
+        "0.17",
+        "nation_first":
+        "4.46",
+        "nation_second":
+        "16.67",
+        "nation_third":
+        "37.50",
+        "here_first":
+        "5.90",
+        "here_second":
+        "37.50",
+        "here_third":
+        "63.75",
+        "motor_no":
+        "39",
+        "motor_second":
+        "33.96",
+        "motor_third":
+        "56.60",
+        "boat_no":
+        "26",
+        "boat_second":
+        "25.00",
+        "boat_third":
+        "38.64"
+    })
+
+    assert (member_array.shape == (25, ))
+    assert (np.all(member_array == np.array([
+        1., 0., 0., 0., 0., 0., 0., 0., 1., 0., 42., 49.5, 0., 0., 0.17, 4.46,
+        16.67, 37.5, 5.9, 37.5, 63.75, 33.96, 56.6, 25., 38.64
+    ]).astype(np.float32)))
+
+
+def test_convert_member_to_input():
+    data_processor = GreedyJsonDataProcessor()
+    json_list = data_processor._load_json()
+    inp = data_processor._convert_json_to_input_ndarray(json_list)
+    # TODO 実際は members が 6人なのと人のデータを入れて変わる
+    assert (inp.shape == (11309, 151))
