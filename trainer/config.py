@@ -9,7 +9,3 @@ class Config(object):
     PREPARED_DIR = "prepared_dir"
     TEST_DIR = "test_dir"
     RESULT_DIR = "result_dir"
-
-
-class TestMultiDirConfig(Config):
-    TEST_DIR = ["test1_dir", "test2_dir", "test3_dir"]

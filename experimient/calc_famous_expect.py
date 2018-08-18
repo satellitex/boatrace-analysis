@@ -28,7 +28,7 @@ class CalcFamousExpectObserver(Observer):
                                 except:
                                     continue
                 else:
-                    raise
+                    raise RuntimeError
                 oddslist.sort()
                 n = len(oddslist)
 

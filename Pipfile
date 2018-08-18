@@ -12,10 +12,11 @@ daz = "*"
 [dev-packages]
 "flake8" = "*"
 "autopep8" = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.6"
 
 [scripts]
-lint = "flake8 trainer"
-fmt = "autopep8 -ivr trainer"
+lint = "flake8 trainer tests"
+fmt = "autopep8 -ivr trainer tests"
