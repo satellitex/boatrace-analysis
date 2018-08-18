@@ -80,7 +80,7 @@ def test_load_json():
 
     print(json_list[0])
     print(json_list[10])
-    assert(len(json_list) == 11309)
+    assert (len(json_list) == 11309)
 
 
 def test_convert_to_label_ndarray():
@@ -90,8 +90,8 @@ def test_convert_to_label_ndarray():
     test_actual_label = \
         data_processor._convert_json_to_label_ndarray(json_list)[:5]
     print("Actual_label : {}".format(test_actual_label))
-    print("Expection_label : {}".format(test_expection_label))
-    assert(np.all(test_actual_label == test_expection_label))
+    print("Expection_label : {}".format(test_expected_label))
+    assert (np.all(test_actual_label == test_expected_label))
     assert (len(json_list) == 11309)
 
 

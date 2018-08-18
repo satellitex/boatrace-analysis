@@ -4,7 +4,8 @@ import argparse
 from trainer.resource import Resource
 from trainer.chainer_module import MLP
 from trainer.boatrace_learning import BoatraceLearning
-from trainer.data_processor import MockJsonDataProcessor
+from trainer.data_processor import MockJsonDataProcessor,\
+    GreedyJsonDataProcessor
 import chainer as ch
 import logging
 
@@ -24,7 +25,7 @@ if __name__ == '__main__':
         default='INFO',
         help='Logging mode ([INFO], DEBUG, WARN)')
     parser.add_argument(
-        '--data', type=str, default='mock', help='Logging mode ([mock])')
+        '--data', type=str, default='boat', help='Logging mode ([boat], mock)')
     parser.add_argument(
         '--batch',
         type=int,
@@ -62,11 +63,19 @@ if __name__ == '__main__':
     # data
     data_processor_cls = MockJsonDataProcessor
     if FLAGS.data == 'mock':
+        batch_size = 4
         train_num = 4
         test_num = 4
+        infer_num = 4
+        hidden_layer_nodes = [4, 4, 2]
         data_processor_cls = MockJsonDataProcessor
-
-    hidden_layer_nodes = [4, 4, 2]
+    elif FLAGS.data == 'boat':
+        batch_size = 128
+        train_num = 8000
+        test_num = 2000
+        infer_num = 1000
+        hidden_layer_nodes = [256, 512, 256, 128, 64, 32, 3]
+        data_processor_cls = GreedyJsonDataProcessor
 
     # predicotr
     predictor = MLP(hidden_layer_nodes)
@@ -107,4 +116,4 @@ if __name__ == '__main__':
             test_flag=True)
 
     elif FLAGS.mode == 'infer':
-        leaner.infer(answer_available=True, batch_size=batch_size)
+        leaner.infer(answer_available=True, batch_size=infer_num)

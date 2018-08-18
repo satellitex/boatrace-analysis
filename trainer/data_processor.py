@@ -145,14 +145,7 @@ class JsonDataProcessor(DataProcessor):
         return self.in_array[st:st + n], self.out_array[st:st + n]
 
     def get_unk_data(self, n=None):
-        if hasattr(self, '_test_ed'):
-            st = self._test_ed
-        else:
-            st = int(len(self.in_array) / 3) * 2
-
-        if n is None:
-            n = int(len(self.in_array) / 3)
-        return self.in_array[st:st + n], self.out_array[st:st + n]
+        return self.in_array[-n:], self.out_array[-n:]
 
 
 class MockJsonDataProcessor(JsonDataProcessor):

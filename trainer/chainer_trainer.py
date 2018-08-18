@@ -19,7 +19,7 @@ class ChainerTrainer(Trainer):
                  resource,
                  *,
                  restart=True,
-                 dropout=False,
+                 dropout=True,
                  data_processor=None,
                  network=None,
                  optimizer=None):
@@ -148,5 +148,7 @@ class ChainerTrainer(Trainer):
     def _evaluate_error(self, y_infer, y_answer):
         loss = ch.functions.softmax_cross_entropy(y_infer, y_answer)
         accuracy = ch.functions.accuracy(y_infer, y_answer)
+        recall = ch.functions.recall(y_infer, y_answer)
         logger.info(f"Loss    : {loss.data:.5e}")
         logger.info(f"Accuracy : {accuracy.data:.5e}")
+        logger.info(recall)
