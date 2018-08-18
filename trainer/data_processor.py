@@ -6,6 +6,8 @@ import numpy as np
 from trainer import util
 import logging
 import chainer as ch
+import os
+import json
 
 DTYPE = np.float32
 logger = logging.getLogger(__name__)
@@ -213,3 +215,27 @@ class MockJsonDataProcessor(JsonDataProcessor):
 
     def _normalize(self, data):
         return ch.functions.normalize(data)
+
+
+class GreedyJsonDataProcessor(JsonDataProcessor):
+    def _load_json(self):
+        path_list = [
+            name for name in os.listdir(self.resource.get_original_dir)
+        ]
+        return [
+            self._load_json_path(self.resource.get_original_dir, name)
+            for name in path_list if os.path.splitext(name)[1] == '.json'
+        ]
+
+    def _load_json_path(self, dir, path):
+        with open("{}/{}".format(dir, path)) as fp:
+            return json.load(fp)
+
+    def _convert_json_to_input_ndarray(self, json_data_list):
+        pass
+
+    def _convert_json_to_output_ndarray(self, json_data_list):
+        pass
+
+    def _normalize(self, data):
+        pass

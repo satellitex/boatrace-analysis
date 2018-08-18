@@ -2,7 +2,7 @@
 
 from trainer.resource import Resource
 from trainer import config
-from trainer.data_processor import JsonDataProcessor
+from trainer.data_processor import JsonDataProcessor, GreedyJsonDataProcessor
 import chainer as ch
 import numpy as np
 import os
@@ -72,3 +72,11 @@ def test_mssp_graph_data_processor():
     assert (y_data.shape == (2, 1))
     assert (np.all(x_data == np.array([[3, 2, 1], [2, 3, 1]])))
     assert (np.all(y_data == np.array([[1], [0]])))
+
+
+def test_load_json():
+    data_processor = GreedyJsonDataProcessor(name='test_greedy')
+    json_list = data_processor._load_json()
+    print(json_list[0])
+    print(json_list[10])
+    assert(len(json_list) == 11309)
