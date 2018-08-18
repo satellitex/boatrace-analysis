@@ -83,10 +83,10 @@ def test_load_json():
 
 
 def test_convert_to_label_ndarray():
-    test_actual_label = np.array([0, 0, 0, 0, 1])
+    test_expected_label = np.array([0, 0, 0, 0, 1])
     data_processor = GreedyJsonDataProcessor()
     json_list = data_processor._load_json()
-    test_expection_label = \
+    test_actual_label = \
         data_processor._convert_json_to_label_ndarray(json_list)[:5]
     print("Actual_label : {}".format(test_actual_label))
     print("Expection_label : {}".format(test_expection_label))
