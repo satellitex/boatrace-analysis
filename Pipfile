@@ -7,8 +7,15 @@ name = "pypi"
 Rx = "==1.6.0"
 chainer = "*"
 "05ffc3a" = {path = "./boatrace-scraping"}
+daz = "*"
 
 [dev-packages]
+"flake8" = "*"
+"autopep8" = "*"
 
 [requires]
 python_version = "3.6"
+
+[scripts]
+lint = "flake8 ."
+fmt = "autopep8 -ivr ."

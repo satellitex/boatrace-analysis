@@ -3,8 +3,8 @@ https://github.com/satellitex/boatrace-scraping のスクレイピング結果�
 
 # environment
 ```buildoutcfg
-$ pipenv shell --three
 $ pipenv install
+$ pipenv shell
 ```
 
 ## 方針
