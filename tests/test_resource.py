@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from gcn_compare.resource import Resource
-from gcn_compare import config
+from trainer.resource import Resource
+from trainer import config
 import os
 
 
@@ -27,10 +27,10 @@ def test_get_log_dir():
     assert_dir_name(resource.get_log_dir)
 
 
-def test_get_graph_dir():
+def test_get_original_dir():
     resource = Resource()
     assert (resource.get_original_dir == "save_dir/original_dir")
-    assert_dir_name(resource.get_graph_dir)
+    assert_dir_name(resource.get_original_dir)
 
 
 def test_get_prepared_dir():
@@ -52,6 +52,6 @@ class TestMultiDirConfig(config.Config):
 def test_multi_dir():
     resource = Resource(config=TestMultiDirConfig)
     assert (resource.get_test_dir == [
-        "{}/{}".format(config.TestMultiDirConfig.SAVE_DIR, dir)
-        for dir in config.TestMultiDirConfig.TEST_DIR
+        "{}/{}".format(TestMultiDirConfig.SAVE_DIR, dir)
+        for dir in TestMultiDirConfig.TEST_DIR
     ])

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from trainer.data_processor import JsonDataProcessor
 from trainer.resource import Resource
 from trainer import config
-import numpy as np
+from trainer.data_processor import JsonDataProcessor
 import chainer as ch
+import numpy as np
 import os
 
 
-class TestJsonDataProcessor(JsonDataProcessor):
+class JsonTestDataProcessor(JsonDataProcessor):
     def _load_json(self):
         return [
             {
@@ -32,17 +32,14 @@ class TestJsonDataProcessor(JsonDataProcessor):
         ]
 
     def _convert_json_to_input_ndarray(self, json_data_list):
-        return np.concatenate(
-            tuple([
-                np.array([data['a'], data['b'], data['c']])
-                for data in json_data_list
-            ]),
-            axis=0).astype(np.float32)
+        return np.array([
+            np.array([data['a'], data['b'], data['c']])
+            for data in json_data_list
+        ]).astype(np.float32)
 
     def _convert_json_to_output_ndarray(self, json_data_list):
-        return np.concatenate(
-            tuple([np.array([data['ans']]) for data in json_data_list]),
-            axis=0).astype(np.float32)
+        return np.array([np.array([data['ans']])
+                         for data in json_data_list]).astype(np.float32)
 
     def _normalize(self, data):
         return ch.functions.normalize(data)
@@ -55,7 +52,7 @@ class TestConfig(config.Config):
 def test_mssp_graph_data_processor():
     resource = Resource(config=TestConfig)
 
-    data_processor = TestJsonDataProcessor(name='test_json', resource=resource)
+    data_processor = JsonTestDataProcessor(name='test_json', resource=resource)
     data_processor.prepare(force_prepare=True)
 
     assert (os.path.isfile(
@@ -64,6 +61,7 @@ def test_mssp_graph_data_processor():
         os.path.join(resource.get_prepared_dir, 'test_json_out.npy')))
 
     x_data, y_data = data_processor.get_train_data(n=1)
+
     assert (x_data.shape == (1, 3))
     assert (y_data.shape == (1, 1))
     assert (np.all(x_data == np.array([[1, 2, 3]])))

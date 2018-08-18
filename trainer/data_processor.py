@@ -58,8 +58,8 @@ class JsonDataProcessor(DataProcessor):
                                               self.out_name)
                 logger.info("Success Loading from dir {}".format(
                     self.resource.get_prepared_dir))
-                logger.debug(self.in_array[0:5])
-                logger.debug(self.out_array[0:5])
+                logger.debug(self.in_array[0:2])
+                logger.debug(self.out_array[0:2])
                 return
             except FileNotFoundError as e:
                 logger.info(
@@ -68,10 +68,10 @@ class JsonDataProcessor(DataProcessor):
         json_data_list = self._load_json()
         logger.debug(json_data_list)
 
-        self.in_array = self._convert_json_to_input_ndarray(json_data_list, )
+        self.in_array = self._convert_json_to_input_ndarray(json_data_list)
         logger.debug(self.in_array)
 
-        self.out_array = self._convert_json_to_output_ndarray(json_data_list, )
+        self.out_array = self._convert_json_to_output_ndarray(json_data_list)
         logger.debug(self.out_array)
 
         if normalize_adj_flag:
