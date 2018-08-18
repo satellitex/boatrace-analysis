@@ -6,5 +6,14 @@ https://github.com/satellitex/boatrace-scraping のスクレイピング結果�
 $ pipenv install
 $ pipenv shell
 ```
+## exec
+### training
+```
+$ pipenv run train
+```
+### infer
+```
+$ pipenv run infer
+```
 
 ## 方針
