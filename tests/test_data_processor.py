@@ -177,7 +177,7 @@ def test_convert_member_to_input():
     ]).astype(np.float32)))
 
 
-def test_convert_member_to_input():
+def test_convert_json_to_input():
     data_processor = GreedyJsonDataProcessor()
     json_list = data_processor._load_json()
     inp = data_processor._convert_json_to_input_ndarray(json_list)
