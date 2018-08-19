@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import chainer as ch
 from trainer.chainer_trainer import ChainerTrainer
+from trainer.chainer_module import RecallClassifier
 
 
 class BoatraceLearning(ChainerTrainer):
@@ -13,6 +13,7 @@ class BoatraceLearning(ChainerTrainer):
                  name_study,
                  resource,
                  restart=True,
+                 force_prepare=False,
                  dropout=False,
                  data_processor_cls=None,
                  predictor=None,
@@ -35,11 +36,12 @@ class BoatraceLearning(ChainerTrainer):
                 Optimizer
         """
         data_processor = data_processor_cls(name=name_study, resource=resource)
-        network = ch.links.Classifier(predictor)
+        network = RecallClassifier(predictor)
         super(BoatraceLearning, self).__init__(
             name_study,
             resource,
             restart=restart,
+            force_prepare=force_prepare,
             dropout=dropout,
             data_processor=data_processor,
             network=network,

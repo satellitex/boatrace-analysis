@@ -19,6 +19,7 @@ class ChainerTrainer(Trainer):
                  resource,
                  *,
                  restart=True,
+                 force_prepare=False,
                  dropout=True,
                  data_processor=None,
                  network=None,
@@ -27,6 +28,7 @@ class ChainerTrainer(Trainer):
             name_study,
             resource,
             restart=restart,
+            force_prepare=force_prepare,
             dropout=dropout,
             data_processor=data_processor,
             network=network,
@@ -87,8 +89,7 @@ class ChainerTrainer(Trainer):
         trainer.extend(ch.training.extensions.LogReport())
         trainer.extend(
             ch.training.extensions.PrintReport([
-                'epoch', 'main/loss', 'main/accuracy', 'validation/main/loss',
-                'validation/main/accuracy'
+                'epoch', 'main/loss', 'accuracy', 'validation/main/loss',
                 'elapsed_time'
             ]))
         trainer.extend(
@@ -146,9 +147,11 @@ class ChainerTrainer(Trainer):
         return ch.cuda.available
 
     def _evaluate_error(self, y_infer, y_answer):
+        logger.debug(ch.functions.softmax(y_infer))
+        logger.debug(y_answer)
         loss = ch.functions.softmax_cross_entropy(y_infer, y_answer)
         accuracy = ch.functions.accuracy(y_infer, y_answer)
-        recall = ch.functions.recall(y_infer, y_answer)
+        precision = ch.functions.precision(y_infer, y_answer)
         logger.info(f"Loss    : {loss.data:.5e}")
         logger.info(f"Accuracy : {accuracy.data:.5e}")
-        logger.info(recall)
+        logger.info(precision)
