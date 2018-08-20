@@ -5,7 +5,7 @@ from trainer.resource import Resource
 from trainer.chainer_module import MLP
 from trainer.boatrace_learning import BoatraceLearning
 from trainer.data_processor import MockJsonDataProcessor,\
-    GreedyJsonDataProcessor, HalfJsonDataProcessor
+    GreedyJsonDataProcessor, HalfJsonDataProcessor, ShaveJsonDataProcessor
 import chainer as ch
 import logging
 
@@ -89,15 +89,22 @@ if __name__ == '__main__':
         train_num = 8000
         test_num = 2000
         infer_num = 1000
-        hidden_layer_nodes = [256, 512, 256, 128, 64, 32, 2]
+        hidden_layer_nodes = [256, 512, 1024, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2]
         data_processor_cls = GreedyJsonDataProcessor
     elif FLAGS.data == 'bhalf':
         batch_size = 128
-        train_num = 2800
+        train_num = 2000
         test_num = 500
         infer_num = 1000
-        hidden_layer_nodes = [256, 512, 256, 128, 64, 32, 2]
+        hidden_layer_nodes = [256, 512, 1024, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2]
         data_processor_cls = HalfJsonDataProcessor
+    elif FLAGS.data == 'bshave':
+        batch_size = 512
+        train_num = 8000
+        test_num = 2000
+        infer_num = 1000
+        hidden_layer_nodes = [32, 64, 32, 16, 8, 4, 2]
+        data_processor_cls = ShaveJsonDataProcessor
 
     logger.debug(hidden_layer_nodes)
 

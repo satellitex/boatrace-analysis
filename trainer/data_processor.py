@@ -270,11 +270,11 @@ class GreedyJsonDataProcessor(JsonDataProcessor):
                                    self.LEVEL_LABELS), [json_member['age']],
              [json_member['weight']], [json_member['F']], [json_member['L']], [
                  json_member['ST'] if json_member['ST'] != '-' else '0'
-            ], [json_member['nation_first']], [json_member['nation_second']],
-                [json_member['nation_third']], [json_member['here_first']],
-                [json_member['here_second']], [json_member['here_third']],
-                [json_member['motor_second']], [json_member['motor_third']],
-                [json_member['boat_second']], [json_member['boat_third']]),
+             ], [json_member['nation_first']], [json_member['nation_second']],
+             [json_member['nation_third']], [json_member['here_first']],
+             [json_member['here_second']], [json_member['here_third']],
+             [json_member['motor_second']], [json_member['motor_third']],
+             [json_member['boat_second']], [json_member['boat_third']]),
             axis=0).astype(np.float32)
 
     def _convert_one_hot(self, xs, labels):
@@ -311,3 +311,8 @@ class HalfJsonDataProcessor(GreedyJsonDataProcessor):
             for name in path_list[-1000:]
             if os.path.splitext(name)[1] == '.json'
         ]
+
+
+class ShaveJsonDataProcessor(GreedyJsonDataProcessor):
+    def _convert_json_to_input_single(self, json_data):
+        return self._convert_before_to_input(json_data['before'])
