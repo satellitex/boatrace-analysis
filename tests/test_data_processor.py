@@ -2,7 +2,8 @@
 
 from trainer.resource import Resource
 from trainer import config
-from trainer.data_processor import JsonDataProcessor, GreedyJsonDataProcessor
+from trainer.data_processor import JsonDataProcessor,\
+    GreedyJsonDataProcessor, HalfJsonDataProcessor
 import chainer as ch
 import numpy as np
 import os
@@ -49,11 +50,11 @@ class TestConfig(config.Config):
     PREPARED_DIR = "test_prepared_dir"
 
 
-def test_mssp_graph_data_processor():
+def test_json_data_processor():
     resource = Resource(config=TestConfig)
 
     data_processor = JsonTestDataProcessor(name='test_json', resource=resource)
-    data_processor.prepare(force_prepare=True)
+    data_processor.prepare(force_prepare=True, normalize_adj_flag=False)
 
     assert (os.path.isfile(
         os.path.join(resource.get_prepared_dir, 'test_json_in.npy')))
@@ -80,7 +81,7 @@ def test_load_json():
 
     print(json_list[0])
     print(json_list[10])
-    assert (len(json_list) == 11309)
+    assert (len(json_list) == 18744)
 
 
 def test_convert_to_label_ndarray():
@@ -92,7 +93,7 @@ def test_convert_to_label_ndarray():
     print("Actual_label : {}".format(test_actual_label))
     print("Expection_label : {}".format(test_expected_label))
     assert (np.all(test_actual_label == test_expected_label))
-    assert (len(json_list) == 11309)
+    assert (len(json_list) == 18744)
 
 
 def test_convert_one_hot():
@@ -193,5 +194,16 @@ def test_convert_json_to_input():
     data_processor = GreedyJsonDataProcessor()
     json_list = data_processor._load_json()
     inp = data_processor._convert_json_to_input_ndarray(json_list)
-    # TODO 実際は members が 6人なのと人のデータを入れて変わる
-    assert (inp.shape == (11309, 151))
+    assert (inp.shape == (18744, 176))
+
+
+def test_half_json_load():
+    data_processor = HalfJsonDataProcessor()
+    json_list = data_processor._load_json()
+
+    inp = data_processor._convert_json_to_input_ndarray(json_list)
+    out = data_processor._convert_json_to_label_ndarray(json_list)
+
+    assert(inp.dtype == np.float32)
+    assert(out.dtype == np.int32)
+    assert (np.sum(out == 0) / 3500 > 0.4)

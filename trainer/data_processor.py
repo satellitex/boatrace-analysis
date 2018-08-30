@@ -5,9 +5,9 @@ from trainer.resource import Resource
 import numpy as np
 from trainer import util
 import logging
-import chainer as ch
 import os
 import json
+import random
 
 DTYPE = np.float32
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class DataProcessor(object, metaclass=ABCMeta):
 
 
 class JsonDataProcessor(DataProcessor):
-    def prepare(self, force_prepare=False, n=100, normalize_adj_flag=False):
+    def prepare(self, force_prepare=False, n=100, normalize_adj_flag=True):
         """
         prepare calculation.
 
@@ -61,12 +61,12 @@ class JsonDataProcessor(DataProcessor):
                                               self.out_name)
                 logger.info("Success Loading from dir {}".format(
                     self.resource.get_prepared_dir))
-                logger.debug(self.in_array[0:2])
-                logger.debug(self.out_array[0:2])
+                logger.debug(self.in_array.shape)
+                logger.debug(self.out_array.shape)
                 return
             except FileNotFoundError as e:
                 logger.info(
-                    "File not exist so, new create MSSPGraphData to ndarray")
+                    "File not exist so, new create JsonData to ndarray")
 
         json_data_list = self._load_json()
         logger.debug(json_data_list)
@@ -207,7 +207,7 @@ class MockJsonDataProcessor(JsonDataProcessor):
             np.int32)
 
     def _normalize(self, data):
-        return ch.functions.normalize(data)
+        return data
 
 
 class GreedyJsonDataProcessor(JsonDataProcessor):
@@ -281,8 +281,38 @@ class GreedyJsonDataProcessor(JsonDataProcessor):
         return np.eye(len(labels))[labels.index(xs)]
 
     def _convert_json_to_label_ndarray(self, json_data_list):
-        return np.array([1 if int(data['result']['refund']) >= 10**4 else 0
-                         for data in json_data_list])
+        return np.array([
+            1 if int(data['result']['refund']) >= 10**4 else 0
+            for data in json_data_list
+        ]).astype(np.int32)
 
     def _normalize(self, data):
-        pass
+        maxi = np.max(data, axis=0)
+        maxi[np.where(maxi == 0)] = 1
+        print(maxi)
+        return data / maxi
+
+
+class HalfJsonDataProcessor(GreedyJsonDataProcessor):
+    def _load_json(self):
+        path_list = [
+            name for name in os.listdir(self.resource.get_original_dir)
+        ]
+        path_list = sorted(path_list)
+        return [
+            json_data for json_data in [
+                self._load_json_path(self.resource.get_original_dir, name)
+                for name in path_list[:-1000]
+                if os.path.splitext(name)[1] == '.json'
+            ] if int(json_data['result']['refund']) >= 10000
+            or random.randint(0, 5) == 0
+        ] + [
+            self._load_json_path(self.resource.get_original_dir, name)
+            for name in path_list[-1000:]
+            if os.path.splitext(name)[1] == '.json'
+        ]
+
+
+class ShaveJsonDataProcessor(GreedyJsonDataProcessor):
+    def _convert_json_to_input_single(self, json_data):
+        return self._convert_before_to_input(json_data['before'])

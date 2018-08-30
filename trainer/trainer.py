@@ -21,6 +21,7 @@ class Trainer(object, metaclass=ABCMeta):
                  resource,
                  *,
                  restart=True,
+                 force_prepare=False,
                  dropout=False,
                  data_processor=None,
                  network=None,
@@ -68,7 +69,7 @@ class Trainer(object, metaclass=ABCMeta):
         self.n_monitor = 1
 
         # Prepare data
-        self.data_processor.prepare()
+        self.data_processor.prepare(force_prepare=force_prepare)
 
     @abstractmethod
     def train(self, n_epoch, batch_size, *, gpu_id=-1):
