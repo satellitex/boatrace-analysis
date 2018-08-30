@@ -89,14 +89,16 @@ if __name__ == '__main__':
         train_num = 8000
         test_num = 2000
         infer_num = 1000
-        hidden_layer_nodes = [256, 512, 1024, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+        hidden_layer_nodes = [256, 512, 1024, 2048,
+                              1024, 512, 256, 128, 64, 32, 16, 8, 4, 2]
         data_processor_cls = GreedyJsonDataProcessor
     elif FLAGS.data == 'bhalf':
         batch_size = 128
         train_num = 2000
         test_num = 500
         infer_num = 1000
-        hidden_layer_nodes = [256, 512, 1024, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2]
+        hidden_layer_nodes = [256, 512, 1024, 2048,
+                              1024, 512, 256, 128, 64, 32, 16, 8, 4, 2]
         data_processor_cls = HalfJsonDataProcessor
     elif FLAGS.data == 'bshave':
         batch_size = 512

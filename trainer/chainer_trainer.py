@@ -90,7 +90,7 @@ class ChainerTrainer(Trainer):
         trainer.extend(
             ch.training.extensions.PrintReport([
                 'epoch', 'main/loss', 'accuracy', 'validation/main/loss',
-                'elapsed_time', 'precision_0', 'recall_0', 'precision_1', 'recall_1',
+                'elapsed_time'
             ]))
         trainer.extend(
             ch.training.extensions.snapshot(filename=self.name_study +
