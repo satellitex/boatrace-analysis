@@ -43,7 +43,7 @@ class MLP(ch.ChainList):
         return y
 
 
-class RecallClassifier(link.Chain):
+class SummaryClassifier(link.Chain):
     compute_accuracy = True
 
     def __init__(self,
@@ -54,7 +54,7 @@ class RecallClassifier(link.Chain):
             raise TypeError(
                 'label_key must be int or str, but is %s' % type(label_key))
 
-        super(RecallClassifier, self).__init__()
+        super(SummaryClassifier, self).__init__()
         self.lossfun = lossfun
         self.y = None
         self.loss = None
@@ -109,5 +109,14 @@ class RecallClassifier(link.Chain):
         reporter.report({'loss': self.loss}, self)
         if self.compute_accuracy:
             accuracy = ch.functions.accuracy(self.y, t)
+            precision, recall, _, _ = ch.functions.classification_summary(
+                self.y, t)
             reporter.report({'accuracy': accuracy})
+            reporter.report({
+                'precision_{}'.format(i): p
+                for i, p in enumerate(precision.data)
+            })
+            reporter.report(
+                {'recall_{}'.format(i): p
+                 for i, p in enumerate(recall.data)})
         return self.loss

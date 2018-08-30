@@ -81,7 +81,7 @@ def test_load_json():
 
     print(json_list[0])
     print(json_list[10])
-    assert (len(json_list) == 11309)
+    assert (len(json_list) == 18744)
 
 
 def test_convert_to_label_ndarray():
@@ -93,7 +93,7 @@ def test_convert_to_label_ndarray():
     print("Actual_label : {}".format(test_actual_label))
     print("Expection_label : {}".format(test_expected_label))
     assert (np.all(test_actual_label == test_expected_label))
-    assert (len(json_list) == 11309)
+    assert (len(json_list) == 18744)
 
 
 def test_convert_one_hot():
@@ -194,8 +194,7 @@ def test_convert_json_to_input():
     data_processor = GreedyJsonDataProcessor()
     json_list = data_processor._load_json()
     inp = data_processor._convert_json_to_input_ndarray(json_list)
-    # TODO 実際は members が 6人なのと人のデータを入れて変わる
-    assert (inp.shape == (11309, 151))
+    assert (inp.shape == (18744, 176))
 
 
 def test_half_json_load():
