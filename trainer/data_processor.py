@@ -219,6 +219,27 @@ class GreedyJsonDataProcessor(JsonDataProcessor):
     WAKU_LABELS = ['1', '2', '3', '4', '5', '6']
     LEVEL_LABELS = ['A1', 'A2', 'B1', 'B2']
 
+    """
+    特徴量について
+    in: 
+    before:
+        temp        : [0]
+        weateher    : [1:6]
+        windspeed   : [6]
+        wind        : [7:24]
+        watertemp   : [24]
+        wave        : [25]
+    members_i: st = 26 + i * x
+        waku        : [st       : st + 6 ]
+        level       : [st + 6   : st + 10]
+        age         : [st + 10]
+        weight      : [st + 11]
+        F           : [st + 12]
+        L           : [st + 13]
+        ST          : [st + 14]
+        nation,boat*: [st + 15 : st + 14]
+    """
+
     def _load_json(self):
         path_list = [
             name for name in os.listdir(self.resource.get_original_dir)
